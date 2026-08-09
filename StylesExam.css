@@ -5,13 +5,13 @@
 }
 
 .marks-sidebar {
-  width: 48%;
+  width: 38%;
   /* flex-shrink: 0; */
 }
 
 .marks-main {
   padding: 5px;
-  width: 50%;
+  width: 60%;
   /* flex: 1; */
 }
 
