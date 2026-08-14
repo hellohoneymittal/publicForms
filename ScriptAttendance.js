@@ -639,3 +639,69 @@ async function goToStudentContainer() {
     submitBtn.disabled = false;
   }
 }
+
+async function getStudentDetails(inputLeaveFlag = 0) {
+  const outputData = await CALL_API(API_TYPE_CONSTANT.STUDENT_DETAILS, {
+    leaveFlag: inputLeaveFlag,
+  });
+  const studentTbody = document.getElementById("studentTable");
+  const studentSearch = document.getElementById("searchStudent");
+  let studentsDetailsArr = [];
+
+  document.getElementById("showStudentsHeading_lbl").innerHTML =
+    selectedTeacher;
+
+  function render(list) {
+    studentTbody.innerHTML = "";
+
+    list.forEach((student) => {
+      studentTbody.innerHTML += `
+        <tr>
+            <td>${student[0]}</td>
+            <td>${student[1]}</td>
+            ${
+              inputLeaveFlag == 0
+                ? `<td>${student[3]}<br/><a href="tel:${student[4]}">${student[4]}</a><br/><br/>${student[5]}<br/><a href="tel:${student[6]}">${student[6]}</a></td>`
+                : ""
+            }
+        </tr>`;
+    });
+  }
+
+  studentSearch.addEventListener("input", () => {
+    const text = studentSearch.value.toLowerCase();
+
+    const filtered = studentsDetailsArr.filter(
+      (student) =>
+        student[0].toLowerCase().includes(text) ||
+        student[1].toLowerCase().includes(text),
+    );
+
+    render(filtered);
+  });
+
+  if (outputData?.status && outputData.response) {
+    if (typeof outputData.data === "string") {
+      if (outputData.response.includes("ERR"))
+        SHOW_ERROR_POPUP(outputData.response.split("ERR: ")[1]);
+      else SHOW_INFO_POPUP(outputData.response);
+      return;
+    }
+
+    if (outputData.response.output.length == 0) {
+      SHOW_INFO_POPUP(`Unable to fetch Details!`);
+      return;
+    }
+
+    studentsDetailsArr = outputData.response.output;
+
+    console.log(studentsDetailsArr);
+
+    render(studentsDetailsArr);
+
+    SHOW_SPECIFIC_DIV("stdDetailsContainer");
+  } else {
+    SHOW_ERROR_POPUP("Unable to fetch student details!!");
+    return;
+  }
+}
