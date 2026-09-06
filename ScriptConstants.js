@@ -29,6 +29,19 @@ const API_TYPE_CONSTANT = {
   SUBMIT_QP_DISTRIBUTION_STATUS: "SUBMIT_QP_DISTRIBUTION_STATUS",
   SUBMIT_TEACHER_FEEDBACK: "SUBMIT_TEACHER_FEEDBACK",
   GET_TEACHER_FEEDBACKS: "GET_TEACHER_FEEDBACKS",
+
+  //UT_Syllabus
+  CHECK_PASSWORD: "CHECK_PASSWORD",
+  GET_CLASS_SUBJECT_LIST: "GET_CLASS_SUBJECT_LIST",
+  GET_LIST_BY_CLASS_SUBJECT: "GET_LIST_BY_CLASS_SUBJECT",
+  INSERT_CHAPTER_DATA: "INSERT_CHAPTER_DATA",
+  GET_CLASS_LIST_FROM_DRIVE: "GET_CLASS_LIST_FROM_DRIVE",
+  GET_SUBJECT_LIST_FROM_DRIVE: "GET_SUBJECT_LIST_FROM_DRIVE",
+  GET_UT_LIST_FROM_SUBJECT: "GET_UT_LIST_FROM_SUBJECT",
+  GET_UT_CHAPTERS: "GET_UT_CHAPTERS",
+  GET_ALL_UT_CHAPTERS: "GET_ALL_UT_CHAPTERS",
+  GET_FULL_SYLLABUS: "GET_FULL_SYLLABUS",
+  GET_ALL_SUBJECTS_SYLLABUS: "GET_ALL_SUBJECTS_SYLLABUS",
 };
 const DATE_FORMAT_CONSTANT = {
   grid: "DD MMM YYYY",
@@ -120,23 +133,4 @@ const INDEX_DB = {
   storeKey: "teacherLogin",
   dbName: "TeachersAppDB",
   storeName: "loginStore",
-};
-
-let CLASS_MAP = {
-  "Sri Keshava Level 1": "Pre Nursery",
-  "Sri Keshava Level 2": "Nursery",
-  "Sri Keshava Level 3": "KG",
-  "Sri Keshava Level 4": "UKG",
-  "Sri Narayana": "I",
-  "Sri Madhava": "II",
-  "Sri Govinda": "III",
-  "Sri Vishnu": "IV",
-  "Sri Madhusudana": "V",
-  "Sri Trivikrama": "VI",
-  "Sri Vamana": "VII",
-  "Sri Sridhara": "VIII",
-  "Sri Hrishikesha": "IX",
-  "Sri Padmanabha": "X",
-  "Sri Damodara": "XI",
-  "Sri Vasudeva": "XII",
 };
