@@ -1,0 +1,669 @@
+/* Styling the radio button */
+input[type="radio"] {
+  width: 16px; /* Adjust width */
+  height: 16px; /* Adjust height */
+  transform: scale(1.2); /* Scale the radio button */
+  margin-right: 10px; /* Add space between button and label */
+  cursor: pointer;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  input[type="radio"] {
+    transform: scale(1.2); /* Adjust size for mobile */
+  }
+
+  .custom-label {
+    font-size: 16px; /* Adjust font size for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  input[type="radio"] {
+    transform: scale(1); /* Keep it smaller for very small screens */
+  }
+
+  .custom-label {
+    font-size: 14px; /* Smaller font size for very small screens */
+  }
+}
+
+/*radio box style end*/
+
+/*specific css Start*/
+#hmTableDiv td {
+  text-align: left;
+}
+
+.card-view {
+  background: linear-gradient(135deg, #ffffff, #e6e6e6);
+  padding: 10px;
+  border-radius: 16px;
+  width: 96%;
+  max-width: 21rem;
+  text-align: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-view-item {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.card-view-item h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.card-view-item p {
+  font-size: 1.2rem;
+  margin: 5px 0;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+.card-view-item span {
+  font-weight: bold; /* Bold headings */
+}
+
+.card-view-item div {
+  margin-bottom: 10px; /* Adds space between sections */
+  white-space: pre-line;
+}
+
+.table-container-static {
+  background: linear-gradient(135deg, #ffffff, #e6e6e6);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 20rem;
+  flex-direction: column;
+  justify-content: space-between; /* Ensure space between sections */
+}
+
+.heading {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.controlRow {
+  display: flex;
+  align-items: center;
+}
+
+.width30 {
+  width: 30% !important ;
+}
+
+.width40 {
+  width: 40% !important ;
+}
+.width50 {
+  width: 50% !important ;
+}
+.width60 {
+  width: 60% !important ;
+}
+.width70 {
+  width: 70% !important ;
+}
+
+.width80 {
+  width: 80% !important ;
+}
+
+.chapter-box {
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  overflow-x: auto;
+}
+.chapter-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.c-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0;
+}
+
+.c-item-label {
+  width: 50% !important;
+  font:
+    normal normal bold 12px / 14px Helvetica,
+    sans-serif !important;
+}
+.c-item-input {
+  width: 50% !important;
+  font:
+    normal normal bold 12px / 14px Helvetica,
+    sans-serif !important;
+}
+
+/*dynamic dropdonw css start*/
+.dynamic-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 200px;
+}
+
+.dynamic-dropdown-btn {
+  padding: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  width: 117%;
+  margin-left: -15px;
+  text-align: left;
+  box-sizing: border-box;
+  font-size: 1rem;
+  border-radius: 8px;
+  white-space: normal; /* Allow text to wrap */
+  word-wrap: break-word; /* Ensure text wraps properly */
+  overflow-wrap: break-word; /* Break long words if necessary */
+}
+
+.dynamic-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  width: 113%;
+  max-height: 150px;
+  overflow-y: auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-left: -6%;
+}
+
+.dynamic-dropdown-content label {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0px;
+  cursor: pointer;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  font-size: 11px;
+}
+
+.dynamic-dropdown-content label:hover {
+  background-color: #f0f0f0;
+}
+
+.dynamic-dropdown-content input[type="checkbox"] {
+  width: 10%;
+}
+
+#usersListContainer {
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.userRow {
+  display: block;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.userRow:nth-child(even) {
+  background-color: #e6e6e6;
+}
+
+.userRow:hover {
+  background-color: #dcdcdc;
+}
+/*dynamic dropdown css end*/
+
+.no-print {
+  display: block;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* wrapper for cards */
+.syllabus-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.syllabus-card {
+  width: 100%;
+  border: 1px solid #d6a97a;
+  border-radius: 12px;
+  background: #f8d4ad;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* subject header */
+.syllabus-card-header {
+  padding: 14px;
+  background: #fde6cc;
+  border-bottom: 1px solid #d6a97a;
+  border-radius: 12px 12px 0 0;
+  font-weight: 700;
+  font-size: 18px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* body */
+.syllabus-card-body {
+  padding: 18px;
+}
+
+/* UT title - improved */
+.syllabus-ut-title {
+  margin: 16px 0 8px 0;
+  font-weight: 600;
+  font-size: 15px;
+  color: #8b4c1f;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #d6a97a;
+  text-align: left; /* pehle center tha */
+}
+
+/* chapter list - LEFT ALIGN */
+.syllabus-ut-items {
+  text-align: left; /* ye main change hai */
+  line-height: 2;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* thoda spacing har chapter ke beech */
+.syllabus-ut-items div {
+  margin-bottom: 4px;
+}
+
+/* print */
+@media print {
+  .syllabus-card {
+    width: 100% !important;
+  }
+}
+
+body {
+  font-family: Arial;
+  background: #f3f6fb;
+  padding: 10px;
+}
+.container {
+  max-width: 750px;
+  margin: auto;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.header-row {
+  background: #fde6cc;
+  font-weight: 600;
+  border-top: 2px solid #d6a97a;
+  border-bottom: 2px solid #d6a97a;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.right-check {
+  width: 8%;
+  text-align: center;
+}
+
+.locked .chapter {
+  pointer-events: none;
+  opacity: 0.6;
+}
+.multi {
+  width: 5%;
+  text-align: center;
+}
+
+.annual {
+  width: 5%;
+  text-align: center;
+}
+
+.multiHeader {
+  width: 5%;
+  text-align: center;
+}
+.chapterHeader {
+  text-align: center;
+  width: 40%;
+}
+.testHeader {
+  width: 25%;
+  text-align: center;
+}
+.annualHeader {
+  width: 5%;
+  text-align: center;
+}
+
+.chapterList {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.chapterList .row {
+  min-width: 520px; /* ya jo suitable ho */
+}
+
+.master-box {
+  background: #eef3ff;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ut1 {
+  background: #e3f2fd; /* Light Blue */
+}
+
+.ut2 {
+  background: #e8f5e9; /* Light Green */
+}
+
+.ut3 {
+  background: #fff3e0; /* Light Orange */
+}
+
+.ut4 {
+  background: #e6dfe2; /* Light Mauve (from #c3b7bb) */
+}
+
+.ut5 {
+  background: #dcd2ea; /* Light Lavender (from #b2a4c7) */
+}
+
+.ut6 {
+  background: #f4c6d6; /* Light Pink (from #e99fba) */
+}
+
+.bulk-container {
+  width: 100% !important;
+  background: #f3d2ad !important;
+  padding: 12px !important;
+  border-radius: 10px !important;
+}
+
+/* rows */
+.bulk-row {
+  display: flex !important;
+  gap: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+/* columns */
+.bulk-col {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 600 !important;
+}
+
+/* top row width control */
+.bulk-row-top .bulk-title {
+  flex: 1 !important;
+  justify-content: flex-start !important;
+}
+
+.bulk-row-top .bulk-dropdown {
+  flex: 2 !important;
+}
+
+/* inputs */
+.bulk-select {
+  width: 100% !important;
+  padding: 10px !important;
+  border-radius: 8px !important;
+  border: 1px solid #caa27e !important;
+  background: #ffe4c7 !important;
+}
+
+/* reset button */
+.bulk-btn-reset {
+  width: 100% !important;
+  padding: 10px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  background: #d7d7d7 !important;
+  font-weight: 600 !important;
+}
+
+.textAlignLeft {
+  text-align: left !important;
+}
+
+.marginTop1 {
+  margin-top: 1px !important;
+}
+
+/* Desktop */
+@media (min-width: 786px) {
+  .popup-content {
+    min-width: 800px !important; /* apni requirement ke hisaab se change kar sakte ho */
+  }
+  .syllabus-card {
+    width: 100%;
+  }
+  .radio-container {
+    max-width: 100% !important;
+  }
+}
+
+.mapping-box {
+  margin-top: 20px;
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2c3a5;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Top Title */
+.mapping-box > h4 {
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #7a4218;
+}
+
+/* UT Heading */
+#output h4 {
+  background: linear-gradient(90deg, #f4c89f, #f7d7b7);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 18px 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a2f16;
+  text-align: left; /* LEFT ALIGN */
+  letter-spacing: 0.3px;
+}
+
+/* Chapter List Box */
+#output ul {
+  background: #fff7ef;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 0 0 14px 0;
+  list-style: none;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+  text-align: left; /* LEFT ALIGN */
+}
+
+/* Empty state */
+#output ul .empty {
+  background: #ffe1cc;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+/* List Items */
+#output ul li {
+  padding: 6px 4px;
+  border-bottom: 1px dashed #e5c7a6;
+  font-size: 14px;
+  text-align: left; /* LEFT ALIGN */
+  transition: 0.2s ease;
+}
+
+/* Hover effect */
+#output ul li:hover {
+  padding-left: 8px;
+  color: #a3541c;
+}
+
+#output ul li:last-child {
+  border-bottom: none;
+}
+
+#output ul li:last-child {
+  border-bottom: none;
+}
+
+#viewSyllabusBody * {
+  overflow: visible !important;
+}
+
+.no-break {
+  break-inside: avoid;
+  page-break-inside: avoid; /* Older browsers ke liye */
+}
+
+.annual input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 768px) {
+  #bulk-section {
+    position: fixed; /* 🔥 sticky ki jagah fixed */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+
+    background: #e6c79c;
+    padding: 8px;
+    border-bottom: 2px solid #d2a96f;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  #chapterList {
+    margin-top: 60px; /* height of bulk section */
+  }
+
+  .chapter {
+    text-align: left;
+    width: 32%;
+  }
+
+  .test {
+    width: 33%;
+  }
+}
+
+/* ===== DESKTOP ===== */
+@media (min-width: 769px) {
+  #bulk-section {
+    position: fixed;
+    top: 0;
+    width: 48rem;
+    z-index: 999;
+    background: #e6c79c;
+    padding: 10px 12px;
+    border-bottom: 2px solid #d2a96f;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  }
+  .chapter {
+    text-align: left;
+    width: 40%;
+    cursor: pointer;
+  }
+  .test {
+    width: 25%;
+  }
+}
+
+/* ONLY when PDF is generating */
+.pdf-mode .syllabus-wrapper {
+  display: block !important;
+}
+
+.pdf-mode .syllabus-card {
+  page-break-inside: auto;
+  break-inside: auto;
+  margin-bottom: 10px;
+}
+
+.pdf-mode .syllabus-ut-title {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.pdf-mode .syllabus-ut-items {
+  page-break-inside: auto;
+}
+
+.pdf-mode .syllabus-ut-items div {
+  page-break-inside: avoid;
+}
+
+.pdf-mode .syllabus-card-header {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.pdf-mode .syllabus-card-body {
+  page-break-after: auto;
+  break-after: auto;
+}
+
+/* ✅ Header + first UT ko saath rakho */
+.pdf-mode .syllabus-card-header {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* IMPORTANT */
+.pdf-mode * {
+  overflow: visible !important;
+}
