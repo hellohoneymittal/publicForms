@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="StylesCommon.css" />
     <link rel="stylesheet" href="StylesYearlyAdmissionKitSpecific.css" />
+    <link rel="stylesheet" href="StylesExam.css" />
     <link rel="stylesheet" href="StyleUtSyllabus.css" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
@@ -184,6 +185,10 @@
                       View My Timetable
                     </button>
 
+                    <button class="green" onclick="openTimetableWindow()">
+                      View Class Timetable
+                    </button>
+
                     <button class="green" onclick="openAttendanceWindow()">
                       Fill Class Attendance
                     </button>
@@ -205,6 +210,9 @@
                     >
                       View UT Syllabus
                     </button>
+                    <button class="green" onclick="getStudentDetails()">
+                      View Student Details
+                    </button>
                   </div>
                 </div>
               </div>
@@ -218,6 +226,15 @@
                   <div class="question-grid">
                     <button class="green" onclick="openHomeworkWindow()">
                       Check Homework
+                    </button>
+                    <button class="green" onclick="openComputerExamWindow()">
+                      Computers Examination
+                    </button>
+                    <button class="green" onclick="openStudentPasswordWindow()">
+                      View Student Passwords
+                    </button>
+                    <button class="green" onclick="openDateSheetWindow()">
+                      Examination Datesheet
                     </button>
                     <button class="green" onclick="openJapaWindow(1)">
                       Fill Examination Attendance
@@ -296,6 +313,45 @@
             </div>
 
             <button class="red" onclick="onLogoutClick()">Logout</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup" id="stdDetailsContainer">
+        <div class="popup-content scrollable-content">
+          <img
+            src="https://drive.google.com/thumbnail?id=15-SQ9oW0U2eX2vsWmyxvmhwu9Q1QgOZm&sz=w500"
+            alt="School Logo"
+          />
+          <div class="user-info-block">
+            <p id="showStudentsHeading_lbl"></p>
+          </div>
+          <br />
+          <h2 id="studentDetailsHeader">Student Details</h2>
+          <input
+            type="text"
+            id="searchStudent"
+            placeholder="Search by student or class..."
+          />
+
+          <div class="collection-table-container scrollable-content-table">
+            <table>
+              <thead class="table-header">
+                <tr>
+                  <th>Name</th>
+                  <th>Class</th>
+                  <th>Parents' Details</th>
+                </tr>
+              </thead>
+
+              <tbody id="studentTable"></tbody>
+            </table>
+          </div>
+
+          <div class="button-row">
+            <button class="red" onclick="SHOW_SPECIFIC_DIV('menuPopup')">
+              Back
+            </button>
           </div>
         </div>
       </div>
@@ -384,6 +440,163 @@
         </div>
       </div>
 
+      <div class="popup" id="examScheduleGridPopup">
+        <div
+          class="popup-content scrollable-content"
+          id="examScheduleGridSubPopup"
+        >
+          <img
+            src="https://drive.google.com/thumbnail?id=15-SQ9oW0U2eX2vsWmyxvmhwu9Q1QgOZm&sz=w500"
+            alt="School Logo"
+          />
+          <div class="heading">Examination Datesheet</div>
+          <div id="classDropdown">
+            <select id="classSelect">
+              <option value="">---------Select Class--------</option>
+              <option value="All">All</option>
+              <option value="Sri Keshava Level 2">Sri Keshava Level 2</option>
+              <option value="Sri Keshava Level 3">Sri Keshava Level 3</option>
+              <option value="Sri Keshava Level 4">Sri Keshava Level 4</option>
+              <option value="Sri Narayana">Sri Narayana</option>
+              <option value="Sri Madhava">Sri Madhava</option>
+              <option value="Sri Govinda">Sri Govinda</option>
+              <option value="Sri Vishnu">Sri Vishnu</option>
+              <option value="Sri Madhusudana">Sri Madhusudana</option>
+              <option value="Sri Trivikrama">Sri Trivikrama</option>
+              <option value="Sri Vamana">Sri Vamana</option>
+              <option value="Sri Sridhara">Sri Sridhara</option>
+              <option value="Sri Hrishikesha">Sri Hrishikesha</option>
+              <option value="Sri Padmanabha">Sri Padmanabha</option>
+              <option value="Sri Damodara">Sri Damodara</option>
+              <option value="Sri Vasudeva">Sri Vasudeva</option>
+            </select>
+          </div>
+          <div class="button-row">
+            <button class="red" onclick="SHOW_SPECIFIC_DIV('menuPopup')">
+              Back
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup" id="timetableGridPopup">
+        <div
+          class="popup-content scrollable-content"
+          id="timetableGridSubPopup"
+        >
+          <img
+            src="https://drive.google.com/thumbnail?id=15-SQ9oW0U2eX2vsWmyxvmhwu9Q1QgOZm&sz=w500"
+            alt="School Logo"
+          />
+          <div class="heading">Class Timetable</div>
+          <div id="timetableClassDropdown">
+            <select id="timetableClassSelect">
+              <option value="">---------Select Class--------</option>
+              <option value="Sri Keshava Level 1">Sri Keshava Level 1</option>
+              <option value="Sri Keshava Level 2">Sri Keshava Level 2</option>
+              <option value="Sri Keshava Level 3">Sri Keshava Level 3</option>
+              <option value="Sri Keshava Level 4">Sri Keshava Level 4</option>
+              <option value="Sri Narayana">Sri Narayana</option>
+              <option value="Sri Madhava">Sri Madhava</option>
+              <option value="Sri Govinda">Sri Govinda</option>
+              <option value="Sri Vishnu">Sri Vishnu</option>
+              <option value="Sri Madhusudana">Sri Madhusudana</option>
+              <option value="Sri Trivikrama">Sri Trivikrama</option>
+              <option value="Sri Vamana">Sri Vamana</option>
+              <option value="Sri Sridhara">Sri Sridhara</option>
+              <option value="Sri Hrishikesha">Sri Hrishikesha</option>
+              <option value="Sri Padmanabha">Sri Padmanabha</option>
+              <option value="Sri Damodara">Sri Damodara</option>
+              <option value="Sri Vasudeva">Sri Vasudeva</option>
+            </select>
+          </div>
+          <div class="button-row">
+            <button class="red" onclick="SHOW_SPECIFIC_DIV('menuPopup')">
+              Back
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup" id="computerExamWindow">
+        <div class="popup-content scrollable-content">
+          <img
+            src="https://drive.google.com/thumbnail?id=15-SQ9oW0U2eX2vsWmyxvmhwu9Q1QgOZm&sz=w500"
+            alt="School Logo"
+          />
+          <div class="user-info-block">
+            <p id="computerExamHeading_lbl"></p>
+          </div>
+          <br />
+          <h2>Computers Examination Details</h2>
+
+          <div>
+            <select id="computerClassSelect"></select>
+          </div>
+
+          <div>
+            <select id="computerSessionSelect"></select>
+          </div>
+
+          <br />
+
+          <div class="table-card" id="tableBlock">
+            <h3 id="computerExamHeading"></h3>
+            <br />
+            <button class="green" id="viewQPBtn">Question Paper</button>
+            <button class="green" id="openWorkBtn">Student Work Area</button>
+          </div>
+          <br />
+          <div class="button-row">
+            <button class="red" onclick="SHOW_SPECIFIC_DIV('menuPopup')">
+              Back
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup" id="studentPasswordWindow">
+        <div class="popup-content scrollable-content">
+          <img
+            src="https://drive.google.com/thumbnail?id=15-SQ9oW0U2eX2vsWmyxvmhwu9Q1QgOZm&sz=w500"
+            alt="School Logo"
+          />
+          <div class="user-info-block">
+            <p id="studentPasswordHeading_lbl"></p>
+          </div>
+          <br />
+          <h2>Student Password Details</h2>
+
+          <div>
+            <select id="studentClassSelect"></select>
+          </div>
+
+          <br />
+
+          <div class="table-card" id="studentPasswordtableBlock">
+            <div style="overflow: auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Admission Number</th>
+                    <th>Password</th>
+                  </tr>
+                </thead>
+
+                <tbody id="studentPasswordTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <br />
+          <div class="button-row">
+            <button class="red" onclick="SHOW_SPECIFIC_DIV('menuPopup')">
+              Back
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="popup" id="stdAttendanceContainer">
         <div class="popup-content scrollable-content button-row-end-relative">
           <img
@@ -401,36 +614,8 @@
             <div class="radio-heading-student">
               <label class="required">Pledge</label>
             </div>
-            <div class="radio-content-without-flex">
-              <div class="options">
-                <input
-                  type="checkbox"
-                  id="ct-pledge"
-                  name="mcqPledge"
-                  value="Yes"
-                  class="custom-checkbox"
-                />
-                <label
-                  for="ct-pledge"
-                  class="custom-label-student"
-                  id="ct-pledge-label"
-                >
-                  I will take Learning Assessment Today!
-                </label>
-                <input
-                  type="checkbox"
-                  id="language-pledge"
-                  name="languagePledge"
-                  value="Yes"
-                  class="custom-checkbox"
-                />
-                <label
-                  for="language-pledge"
-                  class="custom-label-student"
-                  id="language-pledge-label"
-                >
-                </label>
-              </div>
+            <div class="radio-content-without-flex" id="dynamic-pledge-list">
+              <!-- Dynamic pledge options go here -->
             </div>
           </div>
 
@@ -481,9 +666,9 @@
           <div class="button-row">
             <button
               class="green"
-              onclick="saveGGJapaData()"
               disabled
               id="japaSubmitButton"
+              onclick="saveGGJapaData()"
             >
               Submit
             </button>
@@ -494,9 +679,7 @@
         <div class="popup-content scrollable-content">
           <div id="classDataContainer"></div>
           <div class="button-row">
-            <button class="green" id="homePage" onclick="homePageClick()">
-              Home
-            </button>
+            <button class="green" onclick="homePageClick()">Home</button>
             <button
               class="purple"
               id="downloadJapaReport"
@@ -663,7 +846,11 @@
             <button class="purple" onclick="SHOW_SPECIFIC_DIV('menuPopup')">
               Home
             </button>
-            <button class="red" onclick="openGenerateHomeworkWindow()">
+            <button
+              class="red"
+              id="backButtonLP"
+              onclick="openGenerateHomeworkWindow()"
+            >
               Back
             </button>
             <button class="green" id="nextButtonLP" onclick="" disabled>
@@ -815,19 +1002,12 @@
           </div>
           <div id="studentsMarksWindow"></div>
           <div class="button-row">
-            <button
-              class="red"
-              onclick="
-                SHOW_CONFIRMATION_POPUP(
-                  'Do you want to reset form?',
-                  resetExamForm,
-                )
-              "
-            >
-              Reset
-            </button>
             <button class="purple" onclick="checkSelectedTest(1)">Back</button>
-            <button class="green" onclick="validateExamForm()">Submit</button>
+            <button id="clearStudentBtn" class="red">Clear Form</button>
+
+            <button id="saveStudentBtn" class="yellow">Save Student</button>
+
+            <button id="submitAllBtn" class="green" disabled>Submit</button>
           </div>
         </div>
       </div>
@@ -1310,5 +1490,7 @@
     <script src="ScriptGatePass.js"></script>
     <script src="ScriptSplEntrySystem.js"></script>
     <script src="ScriptFeedback.js"></script>
+    <script src="ScriptExamination.js"></script>
+    <script src="ScriptNewExam.js"></script>
   </body>
 </html>

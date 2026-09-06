@@ -5,14 +5,14 @@ let apiClassSubjectMap = {}; // global variable
 let masterList = [];
 
 function loadClassList() {
-  const classSelect = document.getElementById("classSelect");
+  const classSelectUT = document.getElementById("classSelectUT");
   CLASS_LIST.forEach((cls) => {
-    classSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
+    classSelectUT.innerHTML += `<option value="${cls}">${cls}</option>`;
   });
 }
 
 function onClassChange() {
-  selectedClassUT = document.getElementById("classSelect").value;
+  selectedClassUT = document.getElementById("classSelectUT").value;
   const subjectSelect = document.getElementById("subjectSelect");
 
   // Reset dropdown
@@ -106,7 +106,9 @@ async function getUTList(selectedClassUT, selectedSubjectUT, selectedUT) {
 }
 
 async function submitSyllabus() {
-  const selectedClassUT = document.getElementById("classSelect")?.value?.trim();
+  const selectedClassUT = document
+    .getElementById("classSelectUT")
+    ?.value?.trim();
   const selectedSubjectUT = document
     .getElementById("subjectSelect")
     ?.value?.trim();
@@ -304,7 +306,7 @@ function downloadSyllabusText() {
   /* ---------- HEADER ---------- */
 
   const selectedClassUT =
-    document.getElementById("classSelect")?.value?.trim() || "Class";
+    document.getElementById("classSelectUT")?.value?.trim() || "Class";
 
   const selectedSubjectUT =
     document.getElementById("subjectSelect")?.value?.trim() || "Subject";
@@ -402,7 +404,7 @@ function downloadSyllabus() {
   element.classList.add("pdf-mode");
 
   const selectedClassUT =
-    document.getElementById("classSelect")?.value || "Class";
+    document.getElementById("classSelectUT")?.value || "Class";
   const selectedSubjectUT =
     document.getElementById("subjectSelect")?.value || "Subject";
   const selectedUT = document.getElementById("utSelect")?.value || "All";
@@ -450,12 +452,13 @@ function goBackToSelection() {
 }
 
 function resetSyllabusForm() {
-  ["classSelect", "subjectSelect", "utSelect"].forEach(
+  ["classSelectUT", "subjectSelect", "utSelect"].forEach(
     (id) => (document.getElementById(id).value = ""),
   );
 }
 
 async function proceedToMainScreen(type) {
+  debugger;
   let pwd = "";
   mode = type;
   if (type === "edit") {
@@ -509,12 +512,12 @@ function permissionChanged() {
 }
 
 function resetSelections() {
-  document.getElementById("classSelect").selectedIndex = 0;
+  document.getElementById("classSelectUT").selectedIndex = 0;
   document.getElementById("subjectSelect").selectedIndex = 0;
   document.getElementById("utSelect").selectedIndex = 0;
-  document.getElementById("radioView").checked = true;
-  document.getElementById("passwordBox").style.display = "none";
-  document.getElementById("editPassword").value = "";
+  //document.getElementById("radioView").checked = true;
+  //document.getElementById("passwordBox").style.display = "none";
+  //document.getElementById("editPassword").value = "";
   const utSelect = document.getElementById("utSelect");
   utSelect.disabled = false;
   isEditMode = false;
@@ -565,13 +568,13 @@ function openSyllabusPopup() {
 }
 
 function loadClassListFromApi() {
-  const classSelect = document.getElementById("classSelect");
-  classSelect.innerHTML = `<option value="">Select Class</option>`;
+  const classSelectUT = document.getElementById("classSelectUT");
+  classSelectUT.innerHTML = `<option value="">Select Class</option>`;
 
   const classList = Object.keys(apiClassSubjectMap);
 
   classList.forEach((cls) => {
-    classSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
+    classSelectUT.innerHTML += `<option value="${cls}">${cls}</option>`;
   });
 }
 
@@ -687,7 +690,7 @@ function refreshMapping() {
   /* -------- FINAL RESULT -------- */
 
   finalResult = {
-    className: document.getElementById("classSelect")?.value || "",
+    className: document.getElementById("classSelectUT")?.value || "",
     subject: document.getElementById("subjectSelect")?.value || "",
     mapping: result,
   };

@@ -30,6 +30,7 @@ function renderMenus(selectedName, roleObj) {
   );
   SHOW_BUTTON_BY_ADMIN_ROLE("gatePassBtn", "Security Role", roleObj);
   SHOW_BUTTON_BY_ADMIN_ROLE("giveQPBtn", "Security Role", roleObj);
+  SHOW_BUTTON_BY_ADMIN_ROLE("generateDateSheetBtn", "Security Role", roleObj);
   SHOW_BUTTON_BY_ADMIN_ROLE(
     "splStudentEntryBtn",
     "Special Student Entry Role",
@@ -981,7 +982,7 @@ function SHOW_CONFIRMATION_GRID_POPUP(
   columnNames.forEach((column) => {
     const th = document.createElement("th");
     th.textContent = column.displayName; // Use displayName for the header
-    th.style.border = "1px solid #ddd";
+    th.style.border = "1px solid #0c0101";
     th.style.padding = "8px";
     th.style.textAlign = "left";
     headerRow.appendChild(th);
@@ -1000,7 +1001,7 @@ function SHOW_CONFIRMATION_GRID_POPUP(
     columnNames.forEach((column) => {
       const td = document.createElement("td");
       td.textContent = item[column.actualName] ? item[column.actualName] : ""; // Use actualName to access the data
-      td.style.border = "1px solid #ddd";
+      td.style.border = "1px solid #0c0101";
       td.style.padding = "8px";
       row.appendChild(td);
     });
@@ -1388,7 +1389,7 @@ function toggleSubmitButton(parent_id, button_id) {
   submitBtn.disabled = !anySelected;
 }
 
-function convertDate(input) {
+function convertDateNew(input) {
   return new Date(input).toLocaleDateString("en-GB");
 }
 

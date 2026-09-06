@@ -23,9 +23,10 @@ let studentIntervals = {};
 let ctResponse = {};
 let dataByClassResponse = "";
 let japaData = "";
-let commentThresholdMarks = 0.5;
 let inputPassword = "";
 let inputMarksDetails = {};
+let timetable_input_map = {};
+let lessonPlanFlag = 0;
 
 document.querySelectorAll(".accordion-header").forEach((header) => {
   header.addEventListener("click", () => {
@@ -39,13 +40,13 @@ document.querySelectorAll(".accordion-header").forEach((header) => {
 
 const feedbackArr = [
   "😊Student's Behaviour is Perfect!👍",
-  "Not Disciplined in class",
-  "Not Come on time in class",
+  "Not Disciplined behaviour",
+  "Not Follows Gurukul/Hostel schedule",
   "Not Active in class",
   "Not Complete homework on time",
   "Not Good quality of home work",
   "Not Chants seriously",
-  "Not Sincere in bringing workbook",
+  "Not Sincere in bringing textbook/workbook/notebook",
   "Not Have good relations with others",
   "Not Show proper respect to teachers",
 ];
@@ -213,396 +214,6 @@ async function goNextFromCt() {
   }
 
   return valid_status;
-}
-
-function showMarksWindow() {
-  const examDetailDiv = document.getElementById("examFormHeading_div");
-  const examDetailLabel = document.getElementById("examFormHeading_lbl");
-
-  examDetailDiv.style.display = "block";
-  examDetailLabel.innerHTML = `${selectedExamClass} : ${selectedExamSubject} : ${selectedExamDetails["examName"]}`;
-
-  SHOW_SPECIFIC_DIV("examMarksContainer");
-  const container = document.getElementById("studentsMarksWindow");
-  container.className = "popup-content scrollable-content";
-  container.innerHTML = ""; // Clear old UI
-  let studentArray = selectedExamDetails["studentArr"];
-
-  studentArray.forEach((name) => {
-    let studentName = name.split("%")[0];
-    let studentCol = name.split("%")[1];
-    let handwritingNeeded = selectedExamDetails["handwritingNeeded"];
-    let feedbackNeeded = selectedExamDetails["feedbackNeeded"];
-    let commentNeeded = selectedExamDetails["commentNeeded"];
-    let marksArr = selectedExamDetails["maxMarks"].split("^");
-    let maxMarks = marksArr[0];
-
-    // UI
-    const studentDiv = document.createElement("div");
-    studentDiv.className = "student gg-exam-row-layout";
-    const label = document.createElement("label");
-    label.textContent = studentName;
-    label.className = "required";
-
-    studentDiv.appendChild(label);
-
-    if (marksArr.length == 1) {
-      let marks = 0;
-      const input_marks = document.createElement("input");
-      input_marks.type = "number";
-      input_marks.min = 0;
-      input_marks.max = maxMarks;
-      input_marks.step = 0.1;
-      input_marks.name = "marks_" + maxMarks;
-      input_marks.required = true;
-      input_marks.inputmode = "numeric";
-      input_marks.value = ""; // pre-fill value
-      input_marks.className = "gg-name-exam";
-      input_marks.id = "marks_" + studentCol;
-      input_marks.placeholder = "Enter Marks (0 to " + maxMarks + ")";
-
-      studentDiv.appendChild(input_marks);
-
-      const marksErr = document.createElement("div");
-      marksErr.className = "error";
-      marksErr.id = "Errmarks_" + studentCol;
-
-      studentDiv.appendChild(marksErr);
-
-      input_marks.addEventListener("change", () => {
-        if (validateNumber(input_marks, maxMarks)) {
-          let comment_divider = document.getElementById(
-            "comment_divider_" + studentCol,
-          );
-          let commentBox = document.getElementById("comment_" + studentCol);
-          let commentErr = document.getElementById("Err" + commentBox.id);
-
-          marks = Number(input_marks.value.trim());
-
-          if (marks < commentThresholdMarks * maxMarks && commentNeeded == 1) {
-            comment_divider.style.display = "block";
-            commentBox.value = "";
-            commentBox.style.display = "block";
-            commentErr.innerHTML = "";
-            commentErr.style.display = "block";
-          } else {
-            comment_divider.style.display = "none";
-            commentBox.value = "";
-            commentBox.style.display = "none";
-            commentErr.innerHTML = "";
-            commentErr.style.display = "none";
-          }
-        }
-      });
-    } else {
-      let wmarks = 0;
-      let gmarks = 0;
-      let lmarks = 0;
-
-      const writing_input_marks = document.createElement("input");
-      writing_input_marks.type = "number";
-      writing_input_marks.min = 0;
-      writing_input_marks.max = marksArr[1];
-      writing_input_marks.step = 0.1;
-      writing_input_marks.name = "marks_writing_" + marksArr[1];
-      writing_input_marks.required = true;
-      writing_input_marks.inputmode = "numeric";
-      writing_input_marks.value = ""; // pre-fill value
-      writing_input_marks.className = "gg-name-exam";
-      writing_input_marks.id = "marks_writing_" + studentCol;
-      writing_input_marks.placeholder =
-        "Writing Marks (0 to " + marksArr[1] + ")";
-
-      studentDiv.appendChild(writing_input_marks);
-
-      const writeMarksErr = document.createElement("div");
-      writeMarksErr.className = "error";
-      writeMarksErr.id = "Errmarks_writing_" + studentCol;
-
-      studentDiv.appendChild(writeMarksErr);
-
-      writing_input_marks.addEventListener("change", () => {
-        if (validateNumber(writing_input_marks, marksArr[1])) {
-          let comment_divider = document.getElementById(
-            "comment_divider_" + studentCol,
-          );
-          let commentBox = document.getElementById("comment_" + studentCol);
-          let commentErr = document.getElementById("Err" + commentBox.id);
-
-          wmarks = Number(writing_input_marks.value.trim());
-
-          // console.log("Writing section!")
-          // console.log(wmarks)
-          // console.log(gmarks)
-          // console.log(lmarks)
-          // console.log(wmarks+gmarks+lmarks)
-          // console.log(commentThresholdMarks*maxMarks)
-
-          if (
-            wmarks + gmarks + lmarks < commentThresholdMarks * maxMarks &&
-            commentNeeded == 1
-          ) {
-            comment_divider.style.display = "block";
-            commentBox.value = "";
-            commentBox.style.display = "block";
-            commentErr.innerHTML = "";
-            commentErr.style.display = "block";
-          } else {
-            comment_divider.style.display = "none";
-            commentBox.value = "";
-            commentBox.style.display = "none";
-            commentErr.innerHTML = "";
-            commentErr.style.display = "none";
-          }
-        }
-      });
-
-      let divider = document.createElement("hr");
-      divider.className = "divider";
-      studentDiv.appendChild(divider);
-
-      const grammar_input_marks = document.createElement("input");
-      grammar_input_marks.type = "number";
-      grammar_input_marks.min = 0;
-      grammar_input_marks.max = marksArr[2];
-      grammar_input_marks.step = 0.1;
-      grammar_input_marks.value = ""; // pre-fill value
-      grammar_input_marks.name = "marks_grammar_" + marksArr[2];
-      grammar_input_marks.required = true;
-      grammar_input_marks.inputmode = "numeric";
-      grammar_input_marks.className = "gg-name-exam";
-      grammar_input_marks.id = "marks_grammar_" + studentCol;
-      grammar_input_marks.placeholder =
-        "Grammar Marks (0 to " + marksArr[2] + ")";
-
-      studentDiv.appendChild(grammar_input_marks);
-
-      const gramMarksErr = document.createElement("div");
-      gramMarksErr.className = "error";
-      gramMarksErr.id = "Errmarks_grammar_" + studentCol;
-
-      studentDiv.appendChild(gramMarksErr);
-
-      grammar_input_marks.addEventListener("change", () => {
-        if (validateNumber(grammar_input_marks, marksArr[2])) {
-          let comment_divider = document.getElementById(
-            "comment_divider_" + studentCol,
-          );
-          let commentBox = document.getElementById("comment_" + studentCol);
-          let commentErr = document.getElementById("Err" + commentBox.id);
-
-          gmarks = Number(grammar_input_marks.value.trim());
-
-          // console.log("Writing section!")
-          // console.log(wmarks)
-          // console.log(gmarks)
-          // console.log(lmarks)
-          // console.log(wmarks+gmarks+lmarks)
-          // console.log(commentThresholdMarks*maxMarks)
-
-          if (
-            wmarks + gmarks + lmarks < commentThresholdMarks * maxMarks &&
-            commentNeeded == 1
-          ) {
-            comment_divider.style.display = "block";
-            commentBox.value = "";
-            commentBox.style.display = "block";
-            commentErr.innerHTML = "";
-            commentErr.style.display = "block";
-          } else {
-            comment_divider.style.display = "none";
-            commentBox.value = "";
-            commentBox.style.display = "none";
-            commentErr.innerHTML = "";
-            commentErr.style.display = "none";
-          }
-        }
-      });
-
-      divider = document.createElement("hr");
-      divider.className = "divider";
-      studentDiv.appendChild(divider);
-
-      const literature_input_marks = document.createElement("input");
-      literature_input_marks.type = "number";
-      literature_input_marks.min = 0;
-      literature_input_marks.max = marksArr[3];
-      literature_input_marks.step = 0.1;
-      literature_input_marks.inputmode = "numeric";
-      literature_input_marks.value = ""; // pre-fill value
-      literature_input_marks.className = "gg-name-exam";
-      literature_input_marks.name = "marks_literature_" + marksArr[3];
-      literature_input_marks.required = true;
-      literature_input_marks.id = "marks_literature_" + studentCol;
-      literature_input_marks.placeholder =
-        "Literature Marks (0 to " + marksArr[3] + ")";
-
-      studentDiv.appendChild(literature_input_marks);
-
-      const litMarksErr = document.createElement("div");
-      litMarksErr.className = "error";
-      litMarksErr.id = "Errmarks_literature_" + studentCol;
-
-      studentDiv.appendChild(litMarksErr);
-
-      literature_input_marks.addEventListener("change", () => {
-        if (validateNumber(literature_input_marks, marksArr[3])) {
-          let comment_divider = document.getElementById(
-            "comment_divider_" + studentCol,
-          );
-          let commentBox = document.getElementById("comment_" + studentCol);
-          let commentErr = document.getElementById("Err" + commentBox.id);
-          lmarks = Number(literature_input_marks.value.trim());
-
-          // console.log("Writing section!")
-          // console.log(wmarks)
-          // console.log(gmarks)
-          // console.log(lmarks)
-          // console.log(wmarks+gmarks+lmarks)
-          // console.log(commentThresholdMarks*maxMarks)
-
-          if (
-            wmarks + gmarks + lmarks < commentThresholdMarks * maxMarks &&
-            commentNeeded == 1
-          ) {
-            comment_divider.style.display = "block";
-            commentBox.value = "";
-            commentBox.style.display = "block";
-            commentErr.innerHTML = "";
-            commentErr.style.display = "block";
-          } else {
-            comment_divider.style.display = "none";
-            commentBox.value = "";
-            commentBox.style.display = "none";
-            commentErr.innerHTML = "";
-            commentErr.style.display = "none";
-          }
-        }
-      });
-    }
-
-    // Adding comment box
-    const commentDivider = document.createElement("hr");
-    commentDivider.className = "divider";
-    commentDivider.style.display = "none";
-    commentDivider.id = "comment_divider_" + studentCol;
-
-    studentDiv.appendChild(commentDivider);
-
-    // const commentLabel = document.createElement("label");
-    // commentLabel.textContent = "";
-    // commentLabel.className = "required";
-
-    // studentDiv.appendChild(label);
-
-    const comments = document.createElement("textarea");
-    comments.rows = 4;
-    comments.required = true;
-    comments.id = "comment_" + studentCol;
-    comments.style.display = "none";
-    comments.placeholder =
-      "Please mention areas for improvement as marks < 50%. Comment will be shared with parent and tuition teacher!";
-    studentDiv.appendChild(comments);
-
-    const commentsErr = document.createElement("div");
-    commentsErr.className = "error";
-    commentsErr.id = "Errcomment_" + studentCol;
-
-    studentDiv.appendChild(commentsErr);
-
-    comments.addEventListener("change", function () {
-      validateTextarea(comments);
-    });
-
-    if (handwritingNeeded == 1) {
-      divider = document.createElement("hr");
-      divider.className = "divider";
-      studentDiv.appendChild(divider);
-
-      const handwriting_marks = document.createElement("input");
-      handwriting_marks.type = "number";
-      handwriting_marks.min = 0;
-      handwriting_marks.max = 10;
-      handwriting_marks.step = 0.1;
-      handwriting_marks.inputmode = "numeric";
-      handwriting_marks.value = ""; // pre-fill value
-      handwriting_marks.name = "marks_handwriting_10";
-      handwriting_marks.required = true;
-      handwriting_marks.className = "gg-name-exam";
-      handwriting_marks.id = "marks_handwriting_" + studentCol;
-      handwriting_marks.placeholder = "Handwriting Marks (0 to 10)";
-
-      studentDiv.appendChild(handwriting_marks);
-
-      const hwMarksErr = document.createElement("div");
-      hwMarksErr.className = "error";
-      hwMarksErr.id = "Errmarks_handwriting_" + studentCol;
-
-      studentDiv.appendChild(hwMarksErr);
-
-      handwriting_marks.addEventListener("change", () => {
-        validateNumber(handwriting_marks, 10);
-      });
-    }
-
-    if (feedbackNeeded == 1) {
-      divider = document.createElement("hr");
-      divider.className = "divider";
-      studentDiv.appendChild(divider);
-
-      const checkboxList = document.createElement("div");
-      checkboxList.className = "radio-container-student";
-      checkboxList.id = "feedbackList_" + studentCol; // optional but useful
-
-      // Append container first
-      studentDiv.appendChild(checkboxList);
-
-      const checkboxListHeading = document.createElement("div");
-      checkboxListHeading.className = "radio-heading-student";
-
-      checkboxList.appendChild(checkboxListHeading);
-
-      const fblabel = document.createElement("label");
-      fblabel.textContent = "Behaviour Feedback";
-      fblabel.className = "required";
-      checkboxListHeading.appendChild(fblabel);
-
-      const checkboxContent = document.createElement("div");
-      checkboxContent.className = "radio-content-without-flex";
-      checkboxContent.id = "dynamic-feedback-list";
-
-      feedbackArr.forEach((feedback, index) => {
-        const feedbackId = `feedback-${index}-${studentCol}`; // unique id per student
-
-        const option = document.createElement("div");
-        option.classList.add("options");
-
-        if (feedback.includes("Not")) {
-          option.innerHTML = `
-          <input type="checkbox" id="${feedbackId}" name="feedbackList" value="${feedback}" class="custom-checkbox">
-          <label for="${feedbackId}" class="custom-label-student-red">${feedback}</label>
-        `;
-        } else {
-          option.innerHTML = `
-          <input type="checkbox" id="${feedbackId}" name="feedbackList" value="${feedback}" class="custom-checkbox">
-          <label for="${feedbackId}" class="custom-label-student-green">${feedback}</label>
-        `;
-        }
-
-        checkboxContent.appendChild(option);
-      });
-
-      checkboxList.appendChild(checkboxContent);
-
-      const feedbackErr = document.createElement("div");
-      feedbackErr.className = "error";
-      feedbackErr.id = "Errfeedback_" + studentCol;
-
-      studentDiv.appendChild(feedbackErr);
-    }
-
-    container.appendChild(studentDiv);
-  });
 }
 
 async function openJapaWindow(in_flag = 0) {
@@ -912,64 +523,6 @@ function resetJapaFormFields() {
   updateTimerColor("greenDisabled", mainBtn);
 }
 
-async function goToStudentContainer() {
-  const data = {
-    className: selectedClass,
-    subjectName: selectedSubject,
-  };
-
-  const nameDiv = document.getElementById("selectStudentsHeading_div");
-  const nameLabel = document.getElementById("selectStudentsHeading_lbl");
-  const languageCheckbox = document.getElementById("language-pledge");
-  const languageLabel = document.getElementById("language-pledge-label");
-  const ctCheckbox = document.getElementById("ct-pledge");
-  const ctLabel = document.getElementById("ct-pledge-label");
-  const submitBtn = document.getElementById("mark_attendance_button");
-
-  submitBtn.disabled = true;
-
-  nameDiv.style.display = "block";
-  nameLabel.innerHTML = `${selectedClass} : ${selectedSubject}`;
-
-  languageCheckbox.style.display = "none";
-  languageLabel.style.display = "none";
-  languageCheckbox.checked = false;
-
-  ctCheckbox.style.display = "none";
-  ctLabel.style.display = "none";
-  ctCheckbox.checked = false;
-
-  if (selectedSubject == "English") {
-    languageCheckbox.style.display = "inline-block";
-    languageLabel.style.display = "inline-block";
-    languageLabel.innerHTML = `I will use only English while speaking with students during the period.`;
-  }
-
-  if (selectedSubject == "Hindi") {
-    languageCheckbox.style.display = "inline-block";
-    languageLabel.style.display = "inline-block";
-    languageLabel.innerHTML = `मैं कक्षा के दौरान विद्यार्थियों से केवल हिंदी में ही बात करूँगा/करूँगी।`;
-  }
-
-  SHOW_SPECIFIC_DIV("stdAttendanceContainer");
-
-  const pledgeDiv = document.getElementById("pledgeContainer");
-
-  if (
-    ctResponse[selectedClass] &&
-    ctResponse[selectedClass].includes(selectedSubject.toLowerCase())
-  ) {
-    pledgeDiv.style.display = "inline-block"; // Show
-    ctCheckbox.style.display = "inline-block";
-    ctLabel.style.display = "inline-block";
-  } else if (selectedSubject == "English" || selectedSubject == "Hindi") {
-    pledgeDiv.style.display = "inline-block"; // Show
-  } else {
-    pledgeDiv.style.display = "none"; // Hide
-    submitBtn.disabled = false;
-  }
-}
-
 function groupByChapter(data) {
   const grouped = {};
   data.forEach(([chapter, type, desc]) => {
@@ -1082,6 +635,7 @@ async function callMarkAttendanceClick() {
     studentList: separatedStudentList,
     //lessonPlan: lessonPlanStr,
     attendance: attendanceStr,
+    sendWhatsappFlag: 0,
   };
 
   const outputData = await CALL_API(
@@ -1090,9 +644,52 @@ async function callMarkAttendanceClick() {
   );
 
   if (outputData?.status) {
-    SHOW_SUCCESS_POPUP("Attendance marked successfully!");
-    if (selectedClass.includes("Keshava") || japaFlag == 1) homePageClick();
-    else showJapaWindow();
+    apiPayload["sendWhatsappFlag"] = 1;
+    CALL_API_WITHOUT_LOADING(API_TYPE_CONSTANT.SAVE_ATTENDANCE, apiPayload);
+    SHOW_SUCCESS_POPUP("Attendance marked successfully!", async () => {
+      if (selectedClass.includes("Keshava") || japaFlag == 1) {
+        homePageClick();
+        return;
+      }
+
+      if (selectedSubject) {
+        const outputData1 = await CALL_API(
+          API_TYPE_CONSTANT.GET_TEACHER_ELIGIBLE_SUBJECTS,
+          selectedTeacher,
+        );
+
+        if (outputData1?.status && outputData1.response) {
+          if (
+            typeof outputData1.response === "string" &&
+            outputData1.response.includes("ERR")
+          ) {
+            SHOW_ERROR_POPUP(outputData1.response.split("ERR: ")[1]);
+            return;
+          }
+
+          eligibleHWList = outputData1.response.data;
+
+          if (outputData1.response.infoMsg) {
+            console.log(
+              "Information from Eligible Subject Function:\n\n" +
+                outputData1.response.infoMsg,
+            );
+          }
+
+          if (
+            Object.keys(eligibleHWList).length > 0 &&
+            eligibleHWList[selectedClass] &&
+            eligibleHWList[selectedClass][selectedSubject]
+          ) {
+            lessonPlanFlag = 1;
+            selectedHwClass = selectedClass;
+            selectedHwSubject = selectedSubject;
+          }
+        }
+      }
+      //lessonPlanFlag == 1 ? showLPWindow(1) : showJapaWindow();
+      showJapaWindow();
+    });
   } else {
     SHOW_ERROR_POPUP("ERROR in marking attendance!\n\n" + outputData.response);
     console.log(outputData.response);
@@ -1113,6 +710,15 @@ function markAttendanceforJapaClick() {
 
 function populateJapaResultDataView(data) {
   const container = document.getElementById("classDataContainer");
+  const japaNextButton = document.getElementById("japaNext");
+
+  // if (lessonPlanFlag == 0) {
+  //   japaNextButton.innerHTML = "Home";
+  //   japaNextButton.addEventListener("click", homePageClick);
+  // } else {
+  //   japaNextButton.innerHTML = "Fill Today's Work";
+  //   japaNextButton.addEventListener("click", () => showLPWindow(1));
+  // }
 
   // Group by className (optional — in case you later get multiple classes)
   const grouped = {};
@@ -1294,144 +900,6 @@ function resetExamForm() {
   return;
 }
 
-async function validateExamForm() {
-  let valid_status = true;
-  inputMarksDetails["class"] = selectedExamClass;
-  inputMarksDetails["subject"] = selectedExamSubject;
-  inputMarksDetails["row"] = selectedExamDetails["row"];
-  inputMarksDetails["handwritingNeeded"] =
-    selectedExamDetails["handwritingNeeded"];
-  inputMarksDetails["teacher"] = selectedTeacher;
-  inputMarksDetails["ctReason"] = "";
-  inputMarksDetails["feedbackNeeded"] = selectedExamDetails["feedbackNeeded"];
-  inputMarksDetails["marks"] = {};
-  let studentCol = 0;
-
-  // Validate all marks
-  document.querySelectorAll('input[name^="marks_"]').forEach((input_marks) => {
-    let maxMarksArr = input_marks.name.split("_");
-    let idSplitArr = input_marks.id.split("_");
-    studentCol = idSplitArr[idSplitArr.length - 1];
-
-    if (inputMarksDetails["marks"][studentCol] == null)
-      inputMarksDetails["marks"][studentCol] = {
-        total: 0,
-      };
-
-    validateNumber(input_marks, Number(maxMarksArr[maxMarksArr.length - 1]));
-
-    if (idSplitArr.length == 2 || idSplitArr[1] == "writing") {
-      console.log(
-        "Checking feedback for student: " +
-          studentCol +
-          " with id: " +
-          input_marks.id,
-      );
-      let feedbackList = document.getElementById(`feedbackList_${studentCol}`);
-      if (feedbackList == null) {
-        inputMarksDetails["marks"][studentCol]["feedback"] = [];
-      } else {
-        let checkboxes = feedbackList.querySelectorAll(
-          'input[type="checkbox"][name="feedbackList"]',
-        );
-
-        const errorDiv = document.getElementById(`Errfeedback_${studentCol}`);
-
-        const isAnyChecked = [...checkboxes].some((cb) => cb.checked);
-
-        if (!isAnyChecked)
-          errorDiv.innerHTML = "Please tick at least one checkbox!";
-        else {
-          inputMarksDetails["marks"][studentCol]["feedback"] = [...checkboxes]
-            .filter((cb) => cb.checked)
-            .map((cb) => cb.value);
-          errorDiv.innerHTML = "";
-        }
-      }
-    }
-
-    if (idSplitArr.length == 2) {
-      if (input_marks.value.trim() != "")
-        inputMarksDetails["marks"][studentCol]["total"] = Number(
-          input_marks.value.trim(),
-        );
-    } else {
-      if (input_marks.value.trim() != "") {
-        inputMarksDetails["marks"][studentCol][idSplitArr[1]] = Number(
-          input_marks.value.trim(),
-        );
-        if (idSplitArr[1] != "handwriting")
-          inputMarksDetails["marks"][studentCol]["total"] += Number(
-            input_marks.value.trim(),
-          );
-      }
-    }
-  });
-
-  document.querySelectorAll('textarea[id^="comment"]').forEach((comment) => {
-    if (comment.style.display == "block") {
-      validateTextarea(comment);
-    }
-    console.log(
-      "Setting comment for: " +
-        comment.id.split("_")[1] +
-        " -> " +
-        comment.value.trim(),
-    );
-    inputMarksDetails["marks"][Number(comment.id.split("_")[1])]["comment"] =
-      comment.value.trim();
-  });
-
-  document.querySelectorAll('[id^="Err"]').forEach((e) => {
-    if (e.innerHTML.trim() != "") {
-      valid_status = false;
-      // console.log(e.innerHTML.trim())
-      // console.log(e.id)
-    }
-  });
-
-  if (valid_status) {
-    SHOW_CONFIRMATION_POPUP(
-      "Are you sure you want to submit the marks?",
-      submitExamMarks,
-    );
-  }
-
-  return valid_status;
-}
-
-async function submitExamMarks() {
-  console.log(inputMarksDetails);
-  const outputData = await CALL_API(
-    API_TYPE_CONSTANT.SUBMIT_EXAM_MARKS,
-    inputMarksDetails,
-  );
-
-  if (
-    outputData?.status &&
-    outputData.response &&
-    typeof outputData.response === "string"
-  ) {
-    console.log(outputData.response);
-    if (outputData.response == "ok")
-      SHOW_SUCCESS_POPUP("Marks submitted Successfully!", homePageClick);
-    else if (outputData.response == "okct")
-      SHOW_SUCCESS_POPUP("Response submitted Successfully!", homePageClick);
-    else
-      SHOW_ERROR_POPUP(
-        "Unable to submit marks for: " +
-          selectedExamDetails["examName"] +
-          "!!\n\n" +
-          outputData.response.split("ERR: ")[1],
-      );
-  } else
-    SHOW_ERROR_POPUP(
-      "Unable to submit marks for: " + selectedExamDetails["examName"] + "!!",
-    );
-
-  return;
-}
-
 function resetFormGenData(moveAway = 0) {
   if (moveAway == 0)
     SHOW_CONFIRMATION_POPUP("Do you want to reset form?", resetFormFields);
@@ -1558,4 +1026,277 @@ async function submitQPDistribution() {
   } else SHOW_ERROR_POPUP("Unable to submit response !!");
 
   return;
+}
+
+const passwordDataBlock = document.getElementById("studentPasswordtableBlock");
+const passwordClassSelect = document.getElementById("studentClassSelect");
+const passwordTableBody = document.getElementById("studentPasswordTableBody");
+const tableCard = document.getElementById("studentPasswordtableBlock");
+let passwordOutData = {};
+
+passwordClassSelect.addEventListener("change", loadStudentPasswords);
+
+function loadStudentPasswords() {
+  const selectedClass = passwordClassSelect.value;
+
+  passwordTableBody.innerHTML = "";
+
+  console.log(selectedClass);
+
+  if (selectedClass === "") {
+    tableCard.hidden = true;
+    passwordDataBlock.hidden = true;
+    return;
+  }
+
+  passwordDataBlock.hidden = false;
+
+  tableCard.hidden = false;
+
+  console.log(passwordOutData[selectedClass]);
+
+  renderPasswordTable(passwordOutData[selectedClass]);
+}
+
+function renderPasswordTable(data) {
+  passwordTableBody.innerHTML = "";
+  let i;
+
+  for (i = 0; i < data.length; i++) {
+    let next_element = data[i];
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+
+          <td>${next_element["name"]}</td>
+
+          <td>${next_element["admission_num"]}</td>
+
+          <td>${next_element["password"]}</td>
+
+        `;
+
+    passwordTableBody.appendChild(row);
+  }
+}
+
+function processPasswordSessionData(text, subjectMap) {
+  const lines = text.split("\n");
+
+  lines.forEach((line) => {
+    const match = line.match(/(.+) - (\d+)\/(\d+)/);
+
+    if (!match) return;
+
+    const subject = match[1].trim();
+
+    const present = Number(match[2]);
+    const total = Number(match[3]);
+
+    if (!subjectMap[subject]) {
+      subjectMap[subject] = {
+        present: 0,
+        total: 0,
+      };
+    }
+
+    subjectMap[subject].present += present;
+    subjectMap[subject].total += total;
+  });
+}
+
+async function openStudentPasswordWindow() {
+  let passwordOutputData = await CALL_API("GET_STUDENT_PASSWORD", {});
+
+  if (passwordOutputData?.status && passwordOutputData.data) {
+    if (
+      typeof passwordOutputData.data === "string" &&
+      passwordOutputData.data.includes("ERR")
+    ) {
+      SHOW_ERROR_POPUP(passwordOutputData.data.split("ERR: ")[1]);
+      return;
+    }
+
+    passwordOutData = passwordOutputData.data;
+
+    console.log(passwordOutData);
+
+    document.getElementById("studentPasswordHeading_lbl").innerText =
+      `${selectedTeacher}`;
+
+    passwordTableBody.innerHTML = "";
+    passwordClassSelect.innerHTML = "";
+
+    passwordDataBlock.hidden = true;
+    tableCard.hidden = true;
+
+    let defaultOption = document.createElement("option");
+
+    defaultOption.value = "";
+    defaultOption.textContent = "---------Select Class--------";
+
+    passwordClassSelect.appendChild(defaultOption);
+
+    Object.keys(passwordOutData).forEach((className) => {
+      passwordClassSelect.innerHTML += `
+      <option value="${className}">
+        ${className}
+      </option>
+    `;
+    });
+
+    SHOW_SPECIFIC_DIV("studentPasswordWindow");
+  } else {
+    SHOW_ERROR_POPUP("Some problem in fetching passwords for Students!");
+    return;
+  }
+}
+
+//Timetable Related
+
+document
+  .getElementById("timetableClassSelect")
+  .addEventListener("change", loadTimetableSchedule);
+
+async function openTimetableWindow() {
+  const outputData = await CALL_API(API_TYPE_CONSTANT.GET_ALL_TIMETABLE, {});
+  if (outputData?.status && outputData.response) {
+    if (typeof outputData.response === "string") {
+      if (outputData.response.includes("ERR"))
+        SHOW_ERROR_POPUP(outputData.response.split("ERR: ")[1]);
+      else SHOW_INFO_POPUP(outputData.response);
+      return;
+    }
+
+    if (Object.keys(outputData.response.output).length == 0) {
+      SHOW_INFO_POPUP("No timetable found!");
+      return;
+    }
+
+    console.log(outputData.response);
+
+    const parent_popup = document.getElementById("timetableGridPopup");
+    const popup = document.getElementById("timetableGridSubPopup");
+    const buttonRow = popup.querySelector(".button-row");
+    const dropdown = document.getElementById("timetableClassDropdown");
+
+    dropdown.value = "";
+
+    //Removing all elements or cleanup
+    const heading = popup.querySelector(".heading");
+
+    let current = heading.nextElementSibling;
+
+    while (current && current !== buttonRow) {
+      const next = current.nextElementSibling;
+      if (current !== dropdown) {
+        current.remove();
+      }
+      current = next;
+    }
+
+    timetable_input_map = outputData.response;
+
+    // Show the parent popup
+    SHOW_SPECIFIC_DIV(parent_popup.id);
+  } else {
+    SHOW_ERROR_POPUP("Unable to fetch the timetable!!");
+    return;
+  }
+}
+
+function loadTimetableSchedule() {
+  const selectedClass = document.getElementById("timetableClassSelect").value;
+  const popup = document.getElementById("timetableGridSubPopup");
+  const buttonRow = popup.querySelector(".button-row");
+  const dropdown = document.getElementById("timetableClassDropdown");
+  const heading = popup.querySelector(".heading");
+
+  //Removing all elements or cleanup
+
+  let current = heading.nextElementSibling;
+
+  while (current && current !== buttonRow) {
+    const next = current.nextElementSibling;
+    if (current !== dropdown) {
+      current.remove();
+    }
+    current = next;
+  }
+
+  if (!selectedClass) {
+    return;
+  }
+
+  let header_arr = [selectedClass];
+  let input_data_map = timetable_input_map.output;
+
+  for (i = 0; i < header_arr.length; i++) {
+    let class_header = timetable_input_map.header[header_arr[i]];
+
+    // Add Header element
+    const header = document.createElement("div");
+    header.className = "heading";
+    header.id = `StudentGridStatusText_${i}`;
+    header.style.marginTop = "10px";
+    popup.insertBefore(header, buttonRow);
+
+    console.log(`${header_arr[i]}`);
+
+    const container = document.createElement("div");
+
+    if (typeof class_header === "string") {
+      const text = document.createElement("h3");
+      console.log(input_data_map[`${header_arr[i]}`]);
+      text.innerHTML = input_data_map[`${header_arr[i]}`] + "\n";
+      header.innerHTML = header_arr[i];
+      container.appendChild(text);
+      popup.insertBefore(container, buttonRow);
+      continue;
+    }
+
+    // Add Table
+    console.log(`Creating container with ID StudentGridContainer_${i}`);
+
+    container.id = `StudentGridContainer_${i}`;
+
+    container.classList.add(
+      "collection-table-container",
+      "scrollable-content-table",
+    );
+
+    // Avoid style string
+    container.style.marginTop = "10px";
+
+    // TABLE
+    const table = document.createElement("table");
+    table.id = `StudentGridTable_${i}`;
+
+    // THEAD
+    const thead = document.createElement("thead");
+    thead.id = `StudentGridTHead_${i}`;
+    thead.classList.add("table-header");
+
+    // TBODY
+    const tbody = document.createElement("tbody");
+    tbody.id = `StudentGridTBody_${i}`;
+    tbody.innerHTML = "";
+
+    // Build hierarchy
+    table.appendChild(thead);
+    table.appendChild(tbody);
+
+    container.appendChild(table);
+
+    popup.insertBefore(container, buttonRow);
+
+    populateActionGrid(
+      `Student`,
+      `${header_arr[i]}`,
+      class_header,
+      input_data_map[`${header_arr[i]}`],
+      i,
+    );
+  }
 }

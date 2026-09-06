@@ -150,7 +150,7 @@ function validateLPSelection(ct_sub) {
 }
 
 async function openGenerateHomeworkWindow() {
-  let school_end_time = "13:15";
+  // let school_end_time = "13:15";
   let [h, m] = school_end_time.split(":").map(Number);
   let endMinutes = h * 60 + m;
   let now = new Date();
@@ -196,8 +196,11 @@ async function openGenerateHomeworkWindow() {
       );
       homePageClick();
     } else {
-      populateHWClassDropdown();
-      SHOW_SPECIFIC_DIV("raiseHWContainer");
+      if (populateHWClassDropdown() > 0) SHOW_SPECIFIC_DIV("raiseHWContainer");
+      else {
+        SHOW_INFO_POPUP("School time over for eligible classes!");
+        homePageClick();
+      }
     }
   } else {
     SHOW_ERROR_POPUP(
@@ -211,6 +214,26 @@ async function openGenerateHomeworkWindow() {
 
 // Function to populate the class dropdown for examination
 function populateHWClassDropdown() {
+  let ret_flag = 0;
+  let school_end_time_1 = "13:20";
+  let school_end_time_2 = "14:35";
+  let school_end_time_map = {
+    "Sri Narayana": school_end_time_1,
+    "Sri Madhava": school_end_time_1,
+    "Sri Govinda": school_end_time_1,
+    "Sri Vishnu": school_end_time_1,
+    "Sri Madhusudana": school_end_time_1,
+    "Sri Trivikrama": school_end_time_2,
+    "Sri Vamana": school_end_time_2,
+    "Sri Sridhara": school_end_time_2,
+    "Sri Hrishikesha": school_end_time_2,
+    "Sri Padmanabha": school_end_time_2,
+    "Sri Damodara": school_end_time_2,
+    "Sri Vasudeva": school_end_time_2,
+  };
+
+  let now = new Date();
+  let currentMinutes = now.getHours() * 60 + now.getMinutes();
   const hwclassDropdown = document.getElementById("raiseHWclass");
   const hwsubjectDropdown = document.getElementById("raiseHWsubject");
 
@@ -230,11 +253,25 @@ function populateHWClassDropdown() {
   hwsubjectDropdown.appendChild(defaultSubject);
 
   for (const className in eligibleHWList) {
+    if (school_end_time_map[className] == null) continue;
+    let [h, m] = school_end_time_map[className].split(":").map(Number);
+    let endMinutes = h * 60 + m;
+    if (currentMinutes > endMinutes) {
+      console.log(
+        "School Time over for Today for class: " +
+          className +
+          "! Cannot submit today's work!",
+      );
+      continue;
+    }
+    ret_flag++;
     const option = document.createElement("option");
     option.value = className;
     option.textContent = className;
     hwclassDropdown.appendChild(option);
   }
+
+  return ret_flag;
 }
 
 //  Function to populate the subject dropdown based on the selected class for examination
@@ -355,6 +392,7 @@ function submitLP(in_flag = 2) {
 
 async function sendTodaysWorkBackend() {
   console.log(selectedLessonPlan);
+  let japaSubButton = document.getElementById("japaSubmitButton");
   const outputData = await CALL_API(
     API_TYPE_CONSTANT.SUBMIT_TODAYS_WORK,
     selectedLessonPlan,
@@ -367,7 +405,16 @@ async function sendTodaysWorkBackend() {
   ) {
     console.log(outputData.response);
     if (outputData.response == "ok")
-      SHOW_SUCCESS_POPUP("Today's work submitted Successfully!", homePageClick);
+      SHOW_SUCCESS_POPUP(
+        "Today's work submitted Successfully!",
+        lessonPlanFlag == 0
+          ? homePageClick
+          : () => {
+              japaSubButton.innerHTML = "Submit Japa";
+              japaSubButton.onclick = saveGGJapaData;
+              SHOW_SPECIFIC_DIV("studentsJapaContainer");
+            },
+      );
     else
       SHOW_ERROR_POPUP(
         "Unable to submit today's work for: " +
@@ -386,10 +433,15 @@ async function sendTodaysWorkBackend() {
         "!!",
     );
 
-  return;
+  if (lessonPlanFlag == 0) return;
+  else {
+    japaSubButton.innerHTML = "Submit";
+    japaSubButton.onclick = saveGGJapaData;
+    SHOW_SPECIFIC_DIV("studentsJapaContainer");
+  }
 }
 
-function showLPWindow() {
+function showLPWindow(back_disabled = 0) {
   const examDetailDiv = document.getElementById("selectLPHeading_div");
   const examDetailLabel = document.getElementById("selectLPHeading_lbl");
   const dynamic_option_element = document.getElementById("dynamic-lp-list");
@@ -405,6 +457,9 @@ function showLPWindow() {
     ).length > 0;
   let i;
   let next_button = document.getElementById("nextButtonLP");
+  let back_button = document.getElementById("backButtonLP");
+
+  if (back_disabled == 1) back_button.disabled = true;
 
   next_button.disabled = true;
   next_button.innerHTML = "Submit";
@@ -468,6 +523,7 @@ function showLPWindow() {
     }
   }
 
+  SHOW_INFO_POPUP("Japa STARTED!\n\nPlease fill Today's Work!");
   SHOW_SPECIFIC_DIV("selectLPContainer");
 }
 

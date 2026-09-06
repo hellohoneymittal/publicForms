@@ -1,6 +1,8 @@
 let selectedTeacher = "";
 let selectedClass = "";
 let selectedSubject = "";
+let examNextDay = 0;
+
 const questions = [
   {
     q: "Do you give homework that takes around 25 minutes to complete?",
@@ -202,6 +204,7 @@ function validateAnswer() {
 // Event listener for class dropdown change
 document.getElementById("class").addEventListener("change", function () {
   selectedClass = this.value.trim();
+  examNextDay = classSubList[selectedClass]["examNextDay"];
   populateSubjectDropdown(selectedClass);
   getTodaysQuestion;
   // Reset subject dropdown to default "Select" option when class is changed
@@ -259,7 +262,13 @@ function populateStudentMultiSelectDropdown(outId, inArr, name) {
     const option = document.createElement("div");
     option.classList.add("options");
 
-    option.innerHTML = `
+    if (student.includes(" - L"))
+      option.innerHTML = `
+      <input type="checkbox" id="${studentId} - L" name="${name}" value="${student}" class="custom-checkbox" disabled>
+      <label for="${studentId}" class="disabled-label">${student.split(" - ")[0]}</label>
+    `;
+    else
+      option.innerHTML = `
       <input type="checkbox" id="${studentId}" name="${name}" value="${student}" class="custom-checkbox">
       <label for="${studentId}" class="custom-label-student">${student}</label>
     `;
@@ -360,7 +369,10 @@ function populateSubjectDropdown(selectedClass) {
 
 function showJapaWindow() {
   let japaSubButton = document.getElementById("japaSubmitButton");
+  let popup_cnt = 0;
+
   japaSubButton.disabled = true;
+
   SHOW_SPECIFIC_DIV("studentsJapaContainer");
   const container = document.getElementById("studentsJapaWindow");
   container.innerHTML = ""; // Clear old UI
@@ -426,6 +438,10 @@ function showJapaWindow() {
 
     // --- START/PAUSE/RESUME ---
     startBtn.addEventListener("click", () => {
+      if (popup_cnt == 0 && lessonPlanFlag == 1) {
+        showLPWindow(1);
+        popup_cnt = 1;
+      }
       japaSubButton.disabled = false;
       if (!timerIntervalGG) {
         startTime = Date.now();
@@ -495,7 +511,7 @@ async function openAttendanceWindow() {
   let startMinutes = h * 60 + m;
   let now = new Date();
   let currentMinutes = now.getHours() * 60 + now.getMinutes();
-  let ignoreTeachers = ["Aravinda Nimai Prabhuji"];
+  let ignoreTeachers = [];
   let result = 0;
 
   if (now.getDay() === 0) {
@@ -567,4 +583,125 @@ async function openAttendanceWindow() {
   });
 
   SHOW_SPECIFIC_DIV("pledgePopup");
+}
+
+async function goToStudentContainer() {
+  const data = {
+    className: selectedClass,
+    subjectName: selectedSubject,
+  };
+
+  const nameDiv = document.getElementById("selectStudentsHeading_div");
+  const nameLabel = document.getElementById("selectStudentsHeading_lbl");
+  const submitBtn = document.getElementById("mark_attendance_button");
+  let pledgeArr = [];
+
+  submitBtn.disabled = true;
+
+  nameDiv.style.display = "block";
+  nameLabel.innerHTML = `${selectedClass} : ${selectedSubject}`;
+
+  if (selectedSubject == "English") {
+    pledgeArr.push(
+      "I will use only English while speaking with students during the period.",
+    );
+  }
+
+  if (selectedSubject == "Hindi") {
+    pledgeArr.push(
+      "मैं कक्षा के दौरान विद्यार्थियों से केवल हिंदी में ही बात करूँगा/करूँगी।",
+    );
+  }
+
+  SHOW_SPECIFIC_DIV("stdAttendanceContainer");
+
+  const pledgeDiv = document.getElementById("pledgeContainer");
+
+  if (
+    ctResponse[selectedClass] &&
+    ctResponse[selectedClass].includes(selectedSubject.toLowerCase())
+  ) {
+    pledgeArr.push("I will take Learning Assessment Today!");
+  } else if (examNextDay == 1) {
+    pledgeArr.push("I will discuss question paper today!");
+  }
+
+  if (pledgeArr.length > 0) {
+    pledgeDiv.style.display = "inline-block";
+    // Populate multi-select UI
+    populateStudentMultiSelectDropdown(
+      "dynamic-pledge-list",
+      pledgeArr,
+      "pledgeList",
+    );
+  } else {
+    pledgeDiv.style.display = "none"; // Hide
+    submitBtn.disabled = false;
+  }
+}
+
+async function getStudentDetails(inputLeaveFlag = 0) {
+  const outputData = await CALL_API(API_TYPE_CONSTANT.STUDENT_DETAILS, {
+    leaveFlag: inputLeaveFlag,
+  });
+  const studentTbody = document.getElementById("studentTable");
+  const studentSearch = document.getElementById("searchStudent");
+  let studentsDetailsArr = [];
+
+  document.getElementById("showStudentsHeading_lbl").innerHTML =
+    selectedTeacher;
+
+  function render(list) {
+    studentTbody.innerHTML = "";
+
+    list.forEach((student) => {
+      studentTbody.innerHTML += `
+        <tr>
+            <td>${student[0]}</td>
+            <td>${student[1]}</td>
+            ${
+              inputLeaveFlag == 0
+                ? `<td>${student[3]}<br/><a href="tel:${student[4]}">${student[4]}</a><br/><br/>${student[5]}<br/><a href="tel:${student[6]}">${student[6]}</a></td>`
+                : ""
+            }
+        </tr>`;
+    });
+  }
+
+  studentSearch.addEventListener("input", () => {
+    const text = studentSearch.value.toLowerCase();
+
+    const filtered = studentsDetailsArr.filter(
+      (student) =>
+        student[0].toLowerCase().includes(text) ||
+        student[1].toLowerCase().includes(text),
+    );
+
+    render(filtered);
+  });
+
+  if (outputData?.status && outputData.response) {
+    if (typeof outputData.data === "string") {
+      if (outputData.response.includes("ERR"))
+        SHOW_ERROR_POPUP(outputData.response.split("ERR: ")[1]);
+      else SHOW_INFO_POPUP(outputData.response);
+      return;
+    }
+
+    if (outputData.response.output.length == 0) {
+      SHOW_INFO_POPUP(`Unable to fetch Details!`);
+      return;
+    }
+
+    studentsDetailsArr = outputData.response.output;
+
+    console.log(studentsDetailsArr);
+
+    render(studentsDetailsArr);
+
+    SHOW_SPECIFIC_DIV("stdDetailsContainer");
+  } else {
+    SHOW_ERROR_POPUP("Unable to fetch student details!!");
+    return;
+  }
 }
